@@ -1,3 +1,7 @@
-export default function hello(req, res) {
-  res.send("안녕하세요");
-}
+import productModel from "../models/Product.js";
+
+const createProduct = (req, res) => {
+  productModel.create();
+};
+
+export { createProduct };
