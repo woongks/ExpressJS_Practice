@@ -1,5 +1,5 @@
 // product controller 존재하는지 확인
-import * as productController from "../../controller/product.js";
+import productController from "../../controller/product.js";
 import productModel from "../../models/Product.js";
 import { jest } from "@jest/globals";
 import { createRequest, createResponse } from "node-mocks-http";
@@ -23,20 +23,20 @@ describe("Product Controller Create", () => {
     expect(typeof productController.createProduct).toBe("function");
   });
 
-  it("should call ProductModel.create", () => {
-    productController.createProduct(req, res, next);
+  it("should call ProductModel.create", async () => {
+    await productController.createProduct(req, res, next);
     expect(productModel.create).toBeCalledWith(newProduct);
   });
 
-  it("should return 201 response code", () => {
-    productController.createProduct(req, res, next);
+  it("should return 201 response code", async () => {
+    await productController.createProduct(req, res, next);
     expect(res.statusCode).toBe(201);
     expect(res._isEndCalled()).toBeTruthy(); // 함수값이 리턴되었는지의 참 여부
   });
 
-  it("should return json body in response", () => {
+  it("should return json body in response", async () => {
     Product.create.mockReturnValue(newProduct);
-    productController.createProduct(req, res, next);
+    await productController.createProduct(req, res, next);
     expect(res._getJSONData()).toStrictEqual(newProduct);
   });
 });

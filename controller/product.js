@@ -1,8 +1,9 @@
 import productModel from "../models/Product.js";
 
-const createProduct = (req, res, next) => {
-  const createdProduct = productModel.create(req.body);
+const createProduct = async (req, res, next) => {
+  const createdProduct = await productModel.create(req.body);
+  console.log(createdProduct);
   res.status(201).json(createdProduct);
 };
 
-export default createProduct;
+export default { createProduct };
