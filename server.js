@@ -20,3 +20,9 @@ app.use(express.json()); //body parser 내장 함수
 app.use("/api/products", productRoutes);
 
 console.log(`running on ${PORT}`);
+
+app.use((error, req, res, next) => {
+  //에러 미들웨어
+  res.status(500).json({ message: error.message });
+});
+export default app;

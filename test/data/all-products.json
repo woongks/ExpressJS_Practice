@@ -1,0 +1,17 @@
+[
+  {
+    "name": "sample1",
+    "description": "this is test",
+    "price": 11
+  },
+  {
+    "name": "sample2",
+    "description": "this is test",
+    "price": 12
+  },
+  {
+    "name": "sample3",
+    "description": "this is test",
+    "price": 13
+  }
+]

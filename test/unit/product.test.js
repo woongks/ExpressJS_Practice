@@ -4,9 +4,11 @@ import productModel from "../../models/Product.js";
 import { jest } from "@jest/globals";
 import { createRequest, createResponse } from "node-mocks-http";
 import newProduct from "./../data/new-product.json";
+import allProducts from "./../data/all-products.json";
 import Product from "../../models/Product.js";
 
 productModel.create = jest.fn();
+productModel.find = jest.fn();
 
 let req, res, next;
 beforeEach(() => {
@@ -49,6 +51,40 @@ describe("Product Controller Create", () => {
     const rejectedPromise = Promise.reject(errorMessage);
     productModel.create.mockReturnValue(rejectedPromise); // 원래 mongoDB에서 처리하는 에러 메시지를 mock 함수로 대체
     await productController.createProduct(req, res, next);
+    expect(next).toBeCalledWith(errorMessage);
+  });
+});
+
+// 단위 테스트를 먼저 수행해서 모듈들이 잘 작동되는 것을 확인한 후에 모듈들을 연동해서 테스트를 수행하는 것을 통합 테스트라고 한다.
+// 모듈들의 상호 작용이 잘 이루어지는지 검증하기 위해 실시한다.
+
+describe("Product Controller Get", () => {
+  it("should have a getProducts function", () => {
+    expect(typeof productController.getProducts).toBe("function");
+  });
+
+  it("should call ProductModel.find({})", async () => {
+    await productController.getProducts(req, res, next);
+    expect(productModel.find).toBeCalledWith({});
+  });
+
+  it("should return 200 response", async () => {
+    await productController.getProducts(req, res, next);
+    expect(res.statusCode).toBe(200);
+    expect(res._isEndCalled).toBeTruthy();
+  });
+
+  it("should return json body in response", async () => {
+    productModel.find.mockReturnValue(allProducts);
+    await productController.getProducts(req, res, next);
+    expect(res._getJSONData()).toStrictEqual(allProducts);
+  });
+
+  it("should handle errors", async () => {
+    const errorMessage = { message: "no data" };
+    const rejectedPromise = Promise.reject(errorMessage);
+    productModel.find.mockReturnValue(rejectedPromise); // 원래 mongoDB에서 처리하는 에러 메시지를 mock 함수로 대체
+    await productController.getProducts(req, res, next);
     expect(next).toBeCalledWith(errorMessage);
   });
 });
